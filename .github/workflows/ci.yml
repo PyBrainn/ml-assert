@@ -2,9 +2,9 @@ name: Python Package CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint-and-test:
@@ -14,20 +14,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Install Poetry
-        run: |
-          pip install poetry
-          poetry config virtualenvs.create false
+        uses: snok/install-poetry@v1
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: |
-          poetry install --with dev --extras "dvc"
+        run: poetry install --with dev
       - name: Lint with ruff
-        run: |
-          poetry run ruff check .
+        run: poetry run ruff check .
       - name: Run tests
-        run: |
-          poetry run pytest
+        run: poetry run pytest
 
   build-and-check-examples:
     runs-on: ubuntu-latest
@@ -36,23 +36,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Install Poetry
-        run: |
-          pip install poetry
-          poetry config virtualenvs.create false
+        uses: snok/install-poetry@v1
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: |
-          poetry install --with dev --extras "dvc"
-      - name: Install DVC
-        run: |
-          pip install dvc[all]
+        run: poetry install --with dev
       - name: Build package
-        run: |
-          poetry build
+        run: poetry build
       - name: Execute ultimate guide notebook
         run: |
-          poetry run jupyter nbconvert --to notebook --execute examples/ultimate_guide.ipynb --output-dir /tmp
+          poetry run jupytext --to notebook --execute examples/ultimate_guide.ipynb
+          # Move the executed notebook to a temp directory to avoid git dirty state
+          mv examples/ultimate_guide.nb.ipynb /tmp/ultimate_guide_executed.ipynb
 
   build-docs:
     runs-on: ubuntu-latest
@@ -61,14 +61,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Install Poetry
-        run: |
-          pip install poetry
-          poetry config virtualenvs.create false
+        uses: snok/install-poetry@v1
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: |
-          poetry install --with dev
+        run: poetry install --with dev
       - name: Build docs
-        run: |
-          poetry run mkdocs build
+        run: poetry run mkdocs build
