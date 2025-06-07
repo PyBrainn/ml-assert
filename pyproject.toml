@@ -1,13 +1,53 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+# This section is now only for Poetry's dependency/tooling configuration.
+# All package metadata is in the [project] section below.
+packages = [
+    { include = "ml_assert", from = "src" }
+]
+# Dependencies are now defined in [project] and [tool.poetry.group.dev.dependencies]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pre-commit = "^4.2.0"
+pytest-cov = "^6.1.1"
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.6.14"
+jupytext = "^1.17.2"
+ipykernel = ">=6.29.5,<7.0.0"
+seaborn = ">=0.13.2,<0.14.0"
+ruff = "^0.11.3"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["ml_assert"]
+
+[tool.coverage.report]
+show_missing = true
+
+
+# --- PEP 621 (modern) metadata ---
 [project]
 name = "ml-assert"
 version = "1.0.3"
 description = "A comprehensive assertion-and-validation toolkit for ML workflows."
 authors = [
-    {name = "Shinde Aditya", email = "heyshinde@icloud.com"}
+    {name = "Shinde Aditya", email = "aditya@heyshinde.com"}
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
+keywords = ["ml", "machine-learning", "testing", "validation", "assertion", "mlops"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -15,15 +55,12 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Testing",
 ]
-keywords = ["ml", "machine-learning", "testing", "validation", "assertion", "mlops"]
-
 dependencies = [
     "pandas<3.0.0,>=2.3.0",
     "scikit-learn<2.0.0,>=1.7.0",
@@ -43,30 +80,3 @@ dvc_check = "ml_assert.plugins.dvc_check:DVCArtifactCheckPlugin"
 Homepage = "https://github.com/shinde-aditya/ml-assert"
 Repository = "https://github.com/shinde-aditya/ml-assert"
 "Bug Tracker" = "https://github.com/shinde-aditya/ml-assert/issues"
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q"
-testpaths = [
-    "tests",
-]
-
-[tool.coverage.run]
-branch = true
-source = ["ml_assert"]
-
-[tool.coverage.report]
-show_missing = true
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.4.0"
-pre-commit = "^4.2.0"
-pytest-cov = "^6.1.1"
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.6.14"
-seaborn = ">=0.13.0,<0.14.0"
-ruff = "^0.11.3"
