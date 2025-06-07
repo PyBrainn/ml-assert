@@ -14,7 +14,6 @@ from ml_assert.data.checks import (
     assert_unique,
     assert_values_in_set,
 )
-from ml_assert.data.schema import assert_dataframe_schema
 from ml_assert.model.performance import (
     assert_accuracy_score,
     assert_f1_score,
@@ -22,6 +21,7 @@ from ml_assert.model.performance import (
     assert_recall_score,
     assert_roc_auc_score,
 )
+from ml_assert.schema import Schema
 
 
 class DataFrameAssertion(Assertion):
@@ -41,11 +41,11 @@ class DataFrameAssertion(Assertion):
         self._df = df
         self._assertions: list = []
 
-    def schema(self, schema: dict[str, str]) -> "DataFrameAssertion":
+    def satisfies(self, schema: Schema) -> "DataFrameAssertion":
         """
-        Assert that DataFrame matches given schema.
+        Assert that the DataFrame satisfies the given schema.
         """
-        self._assertions.append(lambda: assert_dataframe_schema(self._df, schema))
+        self._assertions.append(lambda: schema.validate(self._df))
         return self
 
     def no_nulls(self, columns: list[str] | None = None) -> "DataFrameAssertion":

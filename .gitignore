@@ -21,3 +21,7 @@ ultimate_guide_artifacts/
 # Add new paths
 /docs/site
 /examples/(generated)ultimate_guide_artifacts/
+
+
+# Ignore API Files
+pypi-api-token.txt

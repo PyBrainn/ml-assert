@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from ml_assert.plugins.base import Plugin
 from ml_assert.plugins.dvc_check import DVCArtifactCheckPlugin
 from ml_assert.plugins.file_exists import FileExistsPlugin
 
@@ -84,3 +85,13 @@ def test_dvc_check_plugin_dvc_not_found():
         plugin = DVCArtifactCheckPlugin()
         with pytest.raises(FileNotFoundError):
             plugin.run({"path": "data/data.csv"})
+
+
+def test_base_plugin_not_implemented():
+    """Test that the base Plugin class raises NotImplementedError."""
+
+    class BadPlugin(Plugin):
+        pass
+
+    with pytest.raises(TypeError):
+        BadPlugin()

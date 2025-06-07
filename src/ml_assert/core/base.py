@@ -11,7 +11,7 @@ class Assertion(ABC):
     @abstractmethod
     def validate(self):
         """Run the assertion, raising AssertionError on failure."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def __call__(self):
         return self.validate()

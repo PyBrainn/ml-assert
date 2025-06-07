@@ -21,7 +21,7 @@ class Plugin(ABC):
         Raises:
             AssertionError: If the assertion fails.
         """
-        pass
+        pass  # pragma: no cover
 
 
 def get_plugins() -> dict[str, type[Plugin]]:

@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 
 from ml_assert.core.dsl import DataFrameAssertion
+from ml_assert.schema import schema
 
 
 def test_dsl_success():
@@ -9,25 +10,30 @@ def test_dsl_success():
         {"id": [1, 2, 3], "score": [0.5, 0.8, 1.0], "category": ["a", "b", "a"]}
     )
     # Should not raise
-    DataFrameAssertion(df).schema(
-        {"id": "int64", "score": "float64", "category": "object"}
-    ).no_nulls().unique("id").in_range("score", 0.0, 1.0).values_in_set(
+    s = schema()
+    s.col("id").is_type("int64").is_unique()
+    s.col("score").is_type("float64").in_range(0.0, 1.0)
+    s.col("category").is_type("object")
+
+    DataFrameAssertion(df).satisfies(s).no_nulls().values_in_set(
         "category", ["a", "b"]
     ).validate()
 
 
 def test_dsl_schema_failure():
     df = pd.DataFrame({"id": [1, 2]})
-    with pytest.raises(AssertionError) as exc:
-        DataFrameAssertion(df).schema({"id": "int64", "score": "float64"}).validate()
-    assert "Missing column: score" in str(exc.value)
+    with pytest.raises(AssertionError, match="Missing column: score"):
+        s = schema()
+        s.col("id").is_type("int64")
+        s.col("score").is_type("float64")
+        DataFrameAssertion(df).satisfies(s).validate()
 
 
 def test_dsl_no_nulls_failure():
-    df = pd.DataFrame({"col": [1, None]})
+    df = pd.DataFrame({"id": [1, None, 3]})
     with pytest.raises(AssertionError) as exc:
         DataFrameAssertion(df).no_nulls().validate()
-    assert "Column col contains 1 null values" in str(exc.value)
+    assert "Column id contains 1 null values" in str(exc.value)
 
 
 def test_dsl_unique_failure():

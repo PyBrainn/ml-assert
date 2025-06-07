@@ -43,32 +43,32 @@ Chain assertions to validate a `pandas` DataFrame. The chain stops at the first 
 ```python
 import pandas as pd
 import numpy as np
-from ml_assert import DataFrameAssertion
+from ml_assert import Assertion, schema
 
-# DataFrame with a column full of nulls
+# DataFrame with a column full of nulls and an out-of-range value
 data = {
     'user_id': list(range(100, 110)),
-    'age': [25, 30, 22, 45, 30, 50, 60, 22, 33, 41],
+    'age': [25, 30, 99, 45, 30, 50, 60, 22, 33, 41], # 99 is out of range
     'plan_type': ['basic', 'premium', 'basic', 'premium', 'premium', 'basic', 'free', 'free', 'premium', 'basic'],
     'empty_col': [np.nan] * 10
 }
 df = pd.DataFrame(data)
 
-# This check will FAIL because `empty_col` contains nulls.
+# This check will FAIL because `age` has a value > 70
 try:
-    DataFrameAssertion(df) \
-        .unique('user_id') \
-        .in_range('age', 18, 70) \
-        .values_in_set('plan_type', {'basic', 'premium', 'free'}) \
-        .no_nulls() \
-        .validate()
-except AssertionError as e:
-    print(f"As expected, DFA failed: {e}")
+    s = schema()
+    s.col("user_id").is_unique()
+    s.col("age").in_range(18, 70)
+    s.col("plan_type").is_type("object")
 
-# This check will PASS because we only check specific columns for nulls.
-DataFrameAssertion(df) \
-    .no_nulls(['user_id', 'age', 'plan_type']) \
-    .validate()
+    Assertion(df).satisfies(s).no_nulls().validate()
+except AssertionError as e:
+    print(f"As expected, validation failed: {e}")
+
+# This check will PASS because we only check specific columns
+s2 = schema()
+s2.col("user_id").is_unique()
+Assertion(df).satisfies(s2).no_nulls(['user_id', 'age', 'plan_type']).validate()
 
 print("Partial validation passed!")
 ```

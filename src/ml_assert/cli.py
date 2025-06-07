@@ -12,11 +12,29 @@ import typer
 import yaml
 
 from ml_assert.core.dsl import assert_model
-from ml_assert.data.schema import validate_schema
 from ml_assert.plugins.base import get_plugins
+from ml_assert.schema import Schema
 from ml_assert.stats.drift import assert_no_drift
 
 app = typer.Typer(help="ml-assert CLI")
+
+
+def _build_schema_from_yaml(schema_def: dict) -> Schema:
+    """Build a Schema object from a YAML definition."""
+    s = Schema()
+    for col_name, rules in schema_def.items():
+        col_builder = s.col(col_name)
+        if not isinstance(rules, dict):
+            # Handles simple case: { "col": "int64" }
+            col_builder.is_type(rules)
+            continue
+        if "type" in rules:
+            col_builder.is_type(rules["type"])
+        if rules.get("unique"):
+            col_builder.is_unique()
+        if "range" in rules:
+            col_builder.in_range(rules["range"].get("min"), rules["range"].get("max"))
+    return s
 
 
 @app.command()
@@ -27,7 +45,11 @@ def schema(
     """
     Validate a CSV file against a schema.
     """
-    validate_schema(file, schema_file)
+    df = pd.read_csv(file)
+    schema_def = yaml.safe_load(schema_file.read_text())
+    schema_obj = _build_schema_from_yaml(schema_def)
+    schema_obj.validate(df)
+    print("Schema validation passed.")
 
 
 @app.command()
@@ -60,7 +82,10 @@ def run(
         stype = step.get("type")
         try:
             if stype == "schema":
-                validate_schema(Path(step["file"]), Path(step["schema_file"]))
+                df = pd.read_csv(step["file"])
+                schema_def = yaml.safe_load(Path(step["schema_file"]).read_text())
+                schema_obj = _build_schema_from_yaml(schema_def)
+                schema_obj.validate(df)
             elif stype == "drift":
                 df_train = pd.read_csv(step["train"])
                 df_test = pd.read_csv(step["test"])

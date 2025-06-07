@@ -1,9 +1,12 @@
-"""
-ml_assert: A comprehensive assertion-and-validation toolkit for ML workflows.
-"""
+"""Top-level package for ml-assert."""
 
-__version__ = "0.1.0"
+__author__ = """Shinde"""
+__email__ = "data@shinde.io"
+__version__ = "1.0.1"
 
-from .core.dsl import DataFrameAssertion, assert_model
+from .core.dsl import DataFrameAssertion as Assertion
+from .core.dsl import assert_model
+from .schema import schema
+from .stats.drift import assert_no_drift
 
-__all__ = ["DataFrameAssertion", "assert_model"]
+__all__ = ["Assertion", "schema", "assert_no_drift", "assert_model"]

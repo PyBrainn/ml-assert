@@ -4,8 +4,8 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ml-assert"
-version = "1.0.0"
-description = "ml-assert is a comprehensive assertion-and-validation toolkit tailored for every stage of an ML workflow—from data ingestion through model training to production monitoring. It brings the power and clarity of unit-test-style assertions into data pipelines, feature engineering, model validation, drift detection, and CI/CD."
+version = "1.0.1"
+description = "A comprehensive assertion-and-validation toolkit for ML workflows."
 authors = [
     {name = "Shinde Aditya", email = "heyshinde@icloud.com"}
 ]
@@ -52,6 +52,11 @@ dvc_check = "ml_assert.plugins.dvc_check:DVCArtifactCheckPlugin"
 dvc = ["dvc[all]>=3.0.0"]
 
 [tool.poetry]
+name = "ml-assert"
+version = "1.0.1"
+description = "A comprehensive assertion-and-validation toolkit for ML workflows."
+authors = ["Shinde <data@shinde.io>"]
+readme = "README.md"
 packages = [
     { include = "ml_assert", from = "src" }
 ]

@@ -76,3 +76,21 @@ def test_no_drift_fail_categorical():
     df2 = pd.DataFrame({"cat": ["x", "x", "y"]})
     with pytest.raises(AssertionError):
         assert_no_drift(df1, df2, alpha=0.05)
+
+
+def test_wasserstein_distance_fails():
+    """Test that assert_wasserstein_distance fails when distance exceeds max."""
+    series1 = [1, 2, 3]
+    series2 = [11, 12, 13]
+    with pytest.raises(AssertionError, match="exceeds max"):
+        assert_wasserstein_distance(series1, series2, max_distance=5.0)
+
+
+@pytest.mark.filterwarnings("ignore:divide by zero encountered in scalar divide")
+def test_no_drift_autodetect_columns():
+    """Test that assert_no_drift correctly auto-detects column types and fails."""
+    df_train = pd.DataFrame({"numeric": [1, 2, 3], "categorical": ["a", "b", "c"]})
+    df_test = pd.DataFrame({"numeric": [10, 20, 30], "categorical": ["d", "e", "f"]})
+    with pytest.raises(AssertionError):
+        # This should fail on the numeric column first
+        assert_no_drift(df_train, df_test)
