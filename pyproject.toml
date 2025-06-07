@@ -1,6 +1,6 @@
 [project]
 name = "ml-assert"
-version = "1.0.2"
+version = "1.0.3"
 description = "A comprehensive assertion-and-validation toolkit for ML workflows."
 authors = [
     {name = "Shinde Aditya", email = "heyshinde@icloud.com"}

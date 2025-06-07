@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2025-06-08
+## [1.0.3] - 2025-06-08
 
 ### Changed
 -   **Major Refactoring of Schema Validation**: Replaced the simple dictionary-based schema assertion with a powerful, chainable `schema` builder DSL. This provides a more expressive and flexible API for defining complex validation rules.
