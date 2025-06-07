@@ -2,7 +2,7 @@
 
 __author__ = """Shinde"""
 __email__ = "data@shinde.io"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 from .core.dsl import DataFrameAssertion as Assertion
 from .core.dsl import assert_model
