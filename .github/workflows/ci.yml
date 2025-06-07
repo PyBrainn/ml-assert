@@ -19,6 +19,10 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           version: '2.1.3'
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         run: poetry install
       - name: Lint with ruff
@@ -28,5 +32,8 @@ jobs:
       - name: Build package
         run: poetry build
       - name: Execute ultimate guide notebook
+        run: |
+          poetry run jupytext --to notebook --execute examples/ultimate_guide.ipynb
+          mv examples/ultimate_guide.nb.ipynb /tmp/ultimate_guide_executed.ipynb
       - name: Build docs
         run: poetry run mkdocs build -f docs/mkdocs.yml
