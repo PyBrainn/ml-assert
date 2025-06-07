@@ -23,7 +23,7 @@ jobs:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install
       - name: Lint with ruff
         run: poetry run ruff check .
       - name: Run tests
@@ -45,7 +45,7 @@ jobs:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install
       - name: Build package
         run: poetry build
       - name: Execute ultimate guide notebook
@@ -70,6 +70,6 @@ jobs:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install
       - name: Build docs
         run: poetry run mkdocs build
