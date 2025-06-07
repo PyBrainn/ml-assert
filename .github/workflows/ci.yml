@@ -32,5 +32,6 @@ jobs:
         run: poetry run pytest
       - name: Build package
         run: poetry build
+      - name: Execute ultimate guide notebook
       - name: Build docs
-        run: poetry run mkdocs build
+        run: poetry run mkdocs build -f docs/mkdocs.yml
