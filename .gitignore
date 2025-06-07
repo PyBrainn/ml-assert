@@ -1,0 +1,23 @@
+Roadmap.md
+fordevelopers.md
+Project Structure.txt
+
+# Ignore Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+
+# Ignore coverage and test caches
+.pytest_cache/
+.ruff_cache/
+
+# Ignore example artifacts
+ultimate_guide_artifacts/
+
+# Ignore OS files
+.DS_Store
+
+# Add new paths
+/docs/site
+/examples/(generated)ultimate_guide_artifacts/

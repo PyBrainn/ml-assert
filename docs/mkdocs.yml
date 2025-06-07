@@ -1,0 +1,32 @@
+site_name: ml-assert
+repo_url: https://github.com/heyshinde/ml-assert
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  features:
+    - content.tabs.link
+  palette:
+    # Palette toggle for light vs dark mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/heyshinde/ml-assert
+copyright: Copyright &copy; 2025 Shinde Aditya
+docs_dir: source
+nav:
+  - 'Home': 'index.md'
+  - 'Data Assertions': 'data_assertions.md'
+  - 'Statistical Assertions': 'statistical_assertions.md'
+  - 'Model Performance': 'model_assertions.md'
+  - 'Plugins': 'plugins.md'

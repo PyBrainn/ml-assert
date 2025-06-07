@@ -1,0 +1,74 @@
+name: Python Package CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: |
+          poetry install --with dev --extras "dvc"
+      - name: Lint with ruff
+        run: |
+          poetry run ruff check .
+      - name: Run tests
+        run: |
+          poetry run pytest
+
+  build-and-check-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: |
+          poetry install --with dev --extras "dvc"
+      - name: Install DVC
+        run: |
+          pip install dvc[all]
+      - name: Build package
+        run: |
+          poetry build
+      - name: Execute ultimate guide notebook
+        run: |
+          poetry run jupyter nbconvert --to notebook --execute examples/ultimate_guide.ipynb --output-dir /tmp
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+      - name: Build docs
+        run: |
+          poetry run mkdocs build

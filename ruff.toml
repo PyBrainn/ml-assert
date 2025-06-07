@@ -1,0 +1,33 @@
+# Ruff configuration file (ruff.toml)
+# Exclude common directories
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    ".pytest_cache",
+    ".ruff_cache"
+]
+
+# Set maximum line length and indentation
+line-length = 88
+indent-width = 4
+# Target the local Python version
+target-version = "py311"
+
+[lint]
+# Enable Pyflakes, pycodestyle, isort, pyupgrade, flake8-bugbear, and flake8-simplify.
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    # Handled by ruff format
+    "E501",
+]
+
+[format]
+# Use double quotes and spaces, like Black
+quote-style = "double"
+indent-style = "space"
+# Respect magic trailing commas and line endings
+skip-magic-trailing-comma = false
+line-ending = "auto"
