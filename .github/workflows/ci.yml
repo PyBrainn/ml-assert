@@ -22,6 +22,7 @@ jobs:
       - name: Cache Poetry virtualenv
         uses: actions/cache@v3
         with:
+          path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         run: poetry install
@@ -31,9 +32,5 @@ jobs:
         run: poetry run pytest
       - name: Build package
         run: poetry build
-      - name: Execute ultimate guide notebook
-        run: |
-          poetry run jupytext --to notebook --execute examples/ultimate_guide.ipynb
-          mv examples/ultimate_guide.nb.ipynb /tmp/ultimate_guide_executed.ipynb
       - name: Build docs
         run: poetry run mkdocs build -f docs/mkdocs.yml
