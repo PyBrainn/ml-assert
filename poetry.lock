@@ -2840,4 +2840,4 @@ notebooks = ["ipykernel", "jupytext"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "2f553595f49a873f26b957107351edace12b4c05625e34825e48069916d8d551"
+content-hash = "ec44eb8c9d3eb5b4caf28d17778a16ceac4face53ebb8950c8a9b8470e7790a7"

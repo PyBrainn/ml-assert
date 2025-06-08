@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
-    { name = "Shinde Aditya", email = "aditya@heyshinde.com" },
+    { name = "Shinde Aditya", email = "aditya@heyshinde.com" }
 ]
 keywords = ["ml", "machine-learning", "testing", "validation", "assertion", "mlops"]
 classifiers = [
@@ -27,11 +27,11 @@ classifiers = [
     "Topic :: Software Development :: Testing"
 ]
 dependencies = [
-    "pandas<3.0.0,>=2.3.0",
-    "scikit-learn<2.0.0,>=1.7.0",
-    "typer[all]<0.17.0,>=0.16.0",
-    "pyyaml<7.0.0,>=6.0.2",
-    "scipy<2.0.0,>=1.15.3"
+    "pandas>=2.3.0,<3.0.0",
+    "scikit-learn>=1.7.0,<2.0.0",
+    "typer[all]>=0.16.0,<0.17.0",
+    "pyyaml>=6.0.2,<7.0.0",
+    "scipy>=1.15.3,<2.0.0"
 ]
 
 [project.optional-dependencies]
