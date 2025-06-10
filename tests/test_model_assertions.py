@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ml_assert import assert_model
+from ml_assert.core.dsl import ModelAssertion
 from ml_assert.model.performance import (
     assert_accuracy_score,
     assert_f1_score,
@@ -72,18 +72,34 @@ def test_roc_auc_score_fail():
 
 def test_model_assertion_chain():
     """Test that the ModelAssertion DSL chain works as expected."""
-    assert_model(Y_TRUE, Y_PRED, Y_SCORES).accuracy(min_score=0.6).precision(
+    y_true = Y_TRUE
+    y_pred = Y_PRED
+    y_scores = Y_SCORES
+    # Test with min_score
+    ma = ModelAssertion(y_true, y_pred)
+    ma._y_scores = y_scores
+    ma.accuracy(min_score=0.6).precision(min_score=0.6).recall(min_score=0.6).f1(
         min_score=0.6
-    ).recall(min_score=0.6).f1(min_score=0.6).roc_auc(min_score=0.8).validate()
+    ).roc_auc(min_score=0.8).validate()
+    # Test with threshold
+    ma2 = ModelAssertion(y_true, y_pred)
+    ma2._y_scores = y_scores
+    ma2.accuracy(threshold=0.6).precision(threshold=0.6).recall(threshold=0.6).f1(
+        threshold=0.6
+    ).roc_auc(threshold=0.8).validate()
 
 
 def test_model_assertion_chain_fail():
     """Test that the ModelAssertion DSL chain fails on any failing assertion."""
     with pytest.raises(AssertionError):
-        assert_model(Y_TRUE, Y_PRED).accuracy(min_score=0.7).validate()
+        ModelAssertion(Y_TRUE, Y_PRED).accuracy(min_score=0.7).validate()
+    with pytest.raises(AssertionError):
+        ModelAssertion(Y_TRUE, Y_PRED).accuracy(threshold=0.7).validate()
 
 
 def test_roc_auc_missing_scores_fail():
     """Test that ROC AUC assertion fails if y_scores is not provided."""
     with pytest.raises(ValueError, match="y_scores must be provided"):
-        assert_model(Y_TRUE, Y_PRED).roc_auc(min_score=0.8).validate()
+        ModelAssertion(Y_TRUE, Y_PRED).roc_auc(min_score=0.8).validate()
+    with pytest.raises(ValueError, match="y_scores must be provided"):
+        ModelAssertion(Y_TRUE, Y_PRED).roc_auc(threshold=0.8).validate()

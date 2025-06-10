@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2025-06-11
+
+### Added
+- Added comprehensive documentation for all core modules and functions
+- Added detailed API reference in the documentation
+- Added more examples in the documentation for common use cases
+
+### Changed
+- Improved error messages for better debugging experience
+- Enhanced documentation with more detailed examples and explanations
+- Updated contributing guidelines with more detailed instructions
+
+### Fixed
+- Fixed documentation formatting issues
+- Fixed typos and inconsistencies in documentation
+- Fixed minor formatting issues in error messages
+
 ## [1.0.3] - 2025-06-08
 
 ### Changed

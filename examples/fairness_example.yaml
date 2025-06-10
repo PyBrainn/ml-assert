@@ -1,0 +1,37 @@
+# Example YAML config for ml-assert with fairness and explainability checks
+slack_webhook: "https://hooks.slack.com/services/your/webhook/url"
+prometheus_port: 8000
+
+steps:
+  # Basic model performance checks
+  - type: model_performance
+    y_true: "data/y_true.csv"
+    y_pred: "data/y_pred.csv"
+    y_scores: "data/y_scores.csv"
+    assertions:
+      accuracy: 0.8
+      f1: 0.7
+
+  # Fairness checks
+  - type: fairness
+    y_true: "data/y_true.csv"
+    y_pred: "data/y_pred.csv"
+    sensitive_attr: "data/sensitive_attr.csv"
+    demographic_parity: 0.1  # Maximum allowed difference in positive prediction rates
+    equal_opportunity: 0.1   # Maximum allowed difference in true positive rates
+
+  # Model explainability with comprehensive report
+  - type: explainability
+    model: "models/trained_model.pkl"
+    features: "data/features.csv"
+    output_dir: "results/explanation_report"
+    include_plots: true
+    plots:
+      summary:
+        output: "results/explanation_report/summary_plot.png"
+      dependence:
+        - feature: "age"
+          output: "results/explanation_report/dependence_age.png"
+        - feature: "income"
+          interaction_index: "education"
+          output: "results/explanation_report/dependence_income_education.png"

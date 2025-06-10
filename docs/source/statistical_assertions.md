@@ -2,44 +2,128 @@
 
 The `ml_assert.stats` module provides functions for statistical comparison and drift detection between datasets.
 
-## `assert_ks_test`
+---
 
-Performs a two-sample Kolmogorov-Smirnov (KS) test to check if two numeric samples are drawn from the same distribution. The null hypothesis is that the two samples are drawn from the same distribution.
+## Quick Start
 
-- **Usage**: `assert_ks_test(sample1, sample2, alpha=0.05)`
-- **Parameters**:
-    - `sample1`, `sample2` (`Union[pd.Series, np.ndarray, list]`): The two numeric samples to compare.
-    - `alpha` (`float`): The significance level for the test. If the p-value from the test is less than `alpha`, the null hypothesis is rejected.
-- **Raises**: `AssertionError` if the p-value is less than `alpha`, suggesting a significant difference between the distributions.
+```python
+from ml_assert.stats.drift import assert_no_drift
 
-## `assert_chi2_test`
+# Check for drift between reference and current datasets
+assert_no_drift(df_ref, df_cur, alpha=0.05)
+```
 
-Performs a Chi-square test to check if the frequency distribution of categorical data in two samples is similar. The null hypothesis is that the observed frequencies are consistent with the expected frequencies.
+---
 
-- **Usage**: `assert_chi2_test(sample1, sample2, alpha=0.05)`
-- **Parameters**:
-    - `sample1`, `sample2` (`Union[pd.Series, np.ndarray, list]`): The two categorical samples to compare.
-    - `alpha` (`float`): The significance level. If the p-value is less than `alpha`, the null hypothesis is rejected.
-- **Raises**:
-    - `AssertionError` if the p-value is less than `alpha`, indicating a significant difference in distributions.
-    - `AssertionError` from `scipy` if the test cannot be performed (e.g., if the sum of frequencies differs).
+## Drift Detection
 
-## `assert_wasserstein_distance`
+### High-Level Drift Detection
 
-Calculates the Wasserstein distance (or "Earth Mover's Distance") between two numeric distributions. This metric measures the "work" required to transform one distribution into the other.
+The `assert_no_drift` function automatically detects drift in all columns of a DataFrame.
 
-- **Usage**: `assert_wasserstein_distance(sample1, sample2, threshold)`
-- **Parameters**:
-    - `sample1`, `sample2` (`Union[pd.Series, np.ndarray, list]`): The two numeric samples.
-    - `threshold` (`float`): The maximum allowed Wasserstein distance.
-- **Raises**: `AssertionError` if the calculated distance is greater than the `threshold`.
+```python
+from ml_assert.stats.drift import assert_no_drift
 
-## `assert_no_drift`
+# Check for drift between training and test sets
+assert_no_drift(df_train, df_test, alpha=0.05)
+```
 
-A high-level function that checks for data drift between two DataFrames. It automatically applies the KS test to numeric columns and the Chi-square test to categorical columns.
+**Parameters:**
+- `df_ref`: Reference DataFrame (e.g., training data)
+- `df_cur`: Current DataFrame (e.g., inference data)
+- `alpha`: Significance level for statistical tests (default: 0.05)
 
-- **Usage**: `assert_no_drift(df1, df2, alpha=0.05)`
-- **Parameters**:
-    - `df1`, `df2` (`pd.DataFrame`): The two DataFrames to compare (e.g., training and test sets). They must have the same columns.
-    - `alpha` (`float`): The significance level to use for all underlying statistical tests.
-- **Raises**: `AssertionError` if drift is detected in any of the columns.
+### Low-Level Statistical Tests
+
+#### Kolmogorov-Smirnov Test
+
+For comparing continuous distributions.
+
+```python
+from ml_assert.stats.drift import ks_test
+
+# Compare two numeric samples
+statistic, p_value = ks_test(sample1, sample2, alpha=0.05)
+```
+
+#### Chi-Squared Test
+
+For comparing categorical distributions.
+
+```python
+from ml_assert.stats.drift import chi2_test
+
+# Compare two categorical samples
+statistic, p_value = chi2_test(sample1, sample2, alpha=0.05)
+```
+
+#### Wasserstein Distance
+
+For measuring the distance between distributions.
+
+```python
+from ml_assert.stats.drift import wasserstein_distance
+
+# Calculate Wasserstein distance
+distance = wasserstein_distance(sample1, sample2)
+```
+
+---
+
+## Distribution Assertions
+
+### Distribution Testing
+
+Assert that a dataset follows a specific distribution.
+
+```python
+from ml_assert.stats.distribution import assert_distribution
+
+# Assert normal distribution
+assert_distribution(data, distribution="normal", alpha=0.05)
+```
+
+**Supported Distributions:**
+- "normal"
+- "uniform"
+- "exponential"
+- "poisson"
+
+---
+
+## Examples
+
+### Basic Drift Detection
+
+```python
+from ml_assert.stats.drift import assert_no_drift
+
+# Check for drift in all columns
+assert_no_drift(df_train, df_test, alpha=0.05)
+```
+
+### Custom Statistical Tests
+
+```python
+from ml_assert.stats.drift import ks_test, chi2_test
+
+# Compare numeric columns
+statistic, p_value = ks_test(df_train["age"], df_test["age"], alpha=0.05)
+
+# Compare categorical columns
+statistic, p_value = chi2_test(df_train["category"], df_test["category"], alpha=0.05)
+```
+
+### Distribution Testing
+
+```python
+from ml_assert.stats.distribution import assert_distribution
+
+# Test for normal distribution
+assert_distribution(data, distribution="normal", alpha=0.05)
+
+# Test for uniform distribution
+assert_distribution(data, distribution="uniform", alpha=0.05)
+```
+
+For more detailed API reference, see [Stats API](api/stats.md).

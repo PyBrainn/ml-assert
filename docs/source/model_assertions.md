@@ -1,55 +1,134 @@
 # Model Performance Assertions
 
-The `ml_assert.model` module provides functions to validate the performance of classification models. These are typically used via the `assert_model` fluent interface.
+The `ml_assert` module provides a fluent interface for validating model performance metrics.
 
-## `assert_accuracy_score`
+---
 
-Asserts that the model's accuracy is above a minimum threshold. Accuracy is the proportion of correct predictions among the total number of cases processed.
+## Quick Start
 
-- **Usage**: `assert_accuracy_score(y_true, y_pred, min_score)`
-- **Parameters**:
-    - `y_true` (`np.ndarray`): Ground truth (correct) labels.
-    - `y_pred` (`np.ndarray`): Predicted labels, as returned by a classifier.
-    - `min_score` (`float`): The minimum acceptable accuracy score.
-- **Raises**: `AssertionError` if `accuracy_score(y_true, y_pred) < min_score`.
+```python
+from ml_assert import assert_model
 
-## `assert_precision_score`
+# Assert model performance
+assert_model(y_true, y_pred, y_scores) \
+    .accuracy(min_score=0.8) \
+    .precision(min_score=0.8) \
+    .recall(min_score=0.8) \
+    .f1(min_score=0.8) \
+    .roc_auc(min_score=0.9) \
+    .validate()
+```
 
-Asserts that the model's precision is above a minimum threshold. Precision is the ability of the classifier not to label as positive a sample that is negative.
+---
 
-- **Usage**: `assert_precision_score(y_true, y_pred, min_score)`
-- **Parameters**:
-    - `y_true`, `y_pred` (`np.ndarray`): Ground truth and predicted labels.
-    - `min_score` (`float`): The minimum acceptable precision score.
-- **Raises**: `AssertionError` if `precision_score(y_true, y_pred) < min_score`.
+## Available Metrics
 
-## `assert_recall_score`
+### Accuracy
 
-Asserts that the model's recall is above a minimum threshold. Recall is the ability of the classifier to find all the positive samples.
+Measures the proportion of correct predictions.
 
-- **Usage**: `assert_recall_score(y_true, y_pred, min_score)`
-- **Parameters**:
-    - `y_true`, `y_pred` (`np.ndarray`): Ground truth and predicted labels.
-    - `min_score` (`float`): The minimum acceptable recall score.
-- **Raises**: `AssertionError` if `recall_score(y_true, y_pred) < min_score`.
+```python
+assert_model(y_true, y_pred, y_scores) \
+    .accuracy(min_score=0.8) \
+    .validate()
+```
 
-## `assert_f1_score`
+### Precision
 
-Asserts that the model's F1 score is above a minimum threshold. The F1 score is the harmonic mean of precision and recall.
+Measures the ability of the classifier not to label as positive a sample that is negative.
 
-- **Usage**: `assert_f1_score(y_true, y_pred, min_score)`
-- **Parameters**:
-    - `y_true`, `y_pred` (`np.ndarray`): Ground truth and predicted labels.
-    - `min_score` (`float`): The minimum acceptable F1 score.
-- **Raises**: `AssertionError` if `f1_score(y_true, y_pred) < min_score`.
+```python
+assert_model(y_true, y_pred, y_scores) \
+    .precision(min_score=0.8) \
+    .validate()
+```
 
-## `assert_roc_auc_score`
+### Recall
 
-Asserts that the model's ROC AUC score is above a minimum threshold. Area Under the Receiver Operating Characteristic Curve (ROC AUC) measures the ability of a classifier to distinguish between classes.
+Measures the ability of the classifier to find all the positive samples.
 
-- **Usage**: `assert_roc_auc_score(y_true, y_scores, min_score)`
-- **Parameters**:
-    - `y_true` (`np.ndarray`): Ground truth labels.
-    - `y_scores` (`np.ndarray`): Target scores, can be probability estimates of the positive class, confidence values, or non-thresholded measure of decisions.
-    - `min_score` (`float`): The minimum acceptable ROC AUC score.
-- **Raises**: `AssertionError` if `roc_auc_score(y_true, y_scores) < min_score`.
+```python
+assert_model(y_true, y_pred, y_scores) \
+    .recall(min_score=0.8) \
+    .validate()
+```
+
+### F1 Score
+
+The harmonic mean of precision and recall.
+
+```python
+assert_model(y_true, y_pred, y_scores) \
+    .f1(min_score=0.8) \
+    .validate()
+```
+
+### ROC AUC
+
+Area Under the Receiver Operating Characteristic Curve, measuring the ability to distinguish between classes.
+
+```python
+assert_model(y_true, y_pred, y_scores) \
+    .roc_auc(min_score=0.9) \
+    .validate()
+```
+
+---
+
+## Error Handling & Result Reporting
+
+- All assertion methods raise `AssertionError` if a check fails during chaining, unless `.validate()` is called.
+- `.validate()` returns an `AssertionResult` object:
+    - `success` (bool): True if all assertions passed.
+    - `message` (str): Summary message.
+    - `timestamp` (datetime): When the check was run.
+    - `metadata` (dict): Details of each assertion (name, args, success, error if any).
+
+---
+
+## Examples
+
+### Basic Performance Check
+
+```python
+from ml_assert import assert_model
+
+# Check basic performance metrics
+assert_model(y_true, y_pred, y_scores) \
+    .accuracy(min_score=0.8) \
+    .precision(min_score=0.8) \
+    .recall(min_score=0.8) \
+    .validate()
+```
+
+### Comprehensive Performance Check
+
+```python
+from ml_assert import assert_model
+
+# Check all performance metrics
+assert_model(y_true, y_pred, y_scores) \
+    .accuracy(min_score=0.8) \
+    .precision(min_score=0.8) \
+    .recall(min_score=0.8) \
+    .f1(min_score=0.8) \
+    .roc_auc(min_score=0.9) \
+    .validate()
+```
+
+### Custom Thresholds
+
+```python
+from ml_assert import assert_model
+
+# Use different thresholds for different metrics
+assert_model(y_true, y_pred, y_scores) \
+    .accuracy(min_score=0.75) \
+    .precision(min_score=0.85) \
+    .recall(min_score=0.70) \
+    .f1(min_score=0.80) \
+    .roc_auc(min_score=0.90) \
+    .validate()
+```
+
+For more detailed API reference, see [Model API](api/model.md).

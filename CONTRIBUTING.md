@@ -54,4 +54,41 @@ Once your changes are ready, commit them with a descriptive message and push the
 
 In your pull request description, please explain the "why" behind your changes and reference any related issues.
 
+## Release Process
+
+For maintainers, here's the process for releasing a new version:
+
+1. **Update Version**:
+   - Update version in `pyproject.toml`
+   - Update version in `ml_assert/__init__.py`
+   - Update `CHANGELOG.md` with new version and changes
+
+2. **Documentation**:
+   - Ensure all new features are documented
+   - Update examples if needed
+   - Check for any broken links or formatting issues
+
+3. **Testing**:
+   - Run full test suite: `poetry run pytest`
+   - Run linting: `poetry run ruff check .`
+   - Run formatting: `poetry run ruff format .`
+
+4. **Build and Publish**:
+   ```bash
+   # Build the package
+   poetry build
+
+   # Publish to PyPI
+   poetry publish
+   ```
+
+5. **GitHub Release**:
+   - Create a new release on GitHub
+   - Use the changelog entry as the release notes
+   - Tag the release with the version number
+
+6. **Post-Release**:
+   - Update development version in `pyproject.toml`
+   - Create a new branch for the next version
+
 Thank you for your contribution!

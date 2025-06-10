@@ -1,56 +1,165 @@
 # Data Assertions
 
-The `ml_assert.data` module provides a suite of functions for validating the integrity and structure of your `pandas` DataFrames.
+The `ml_assert` module provides a fluent, chainable API for validating the integrity and structure of your `pandas` DataFrames.
 
-## `assert_dataframe_schema`
+---
 
-Validates that a DataFrame conforms to a specified schema.
+## Quick Start
 
-- **Usage**: `assert_dataframe_schema(df, schema)`
-- **Parameters**:
-    - `df` (`pd.DataFrame`): The DataFrame to validate.
-    - `schema` (`dict[str, str]`): A dictionary mapping column names to expected `dtype` strings (e.g., `'int64'`, `'float64'`, `'object'`).
-- **Raises**: `AssertionError` if a column is missing, an extra column is present, or a column's `dtype` does not match.
+```python
+import pandas as pd
+from ml_assert import Assertion, schema
 
-## `assert_no_nulls`
+# Create a DataFrame
+df = pd.DataFrame({
+    "user_id": [1, 2, 3],
+    "age": [25, 30, 35],
+    "plan_type": ["basic", "premium", "basic"]
+})
 
-Asserts that specified columns (or all columns) in a DataFrame contain no `NaN` or `None` values.
+# Create a schema
+s = schema()
+s.col("user_id").is_unique()
+s.col("age").in_range(18, 70)
+s.col("plan_type").is_type("object")
 
-- **Usage**: `assert_no_nulls(df, columns=None)`
-- **Parameters**:
-    - `df` (`pd.DataFrame`): The DataFrame to check.
-    - `columns` (`Optional[list[str]]`): A list of column names to check. If `None` (default), all columns are checked.
-- **Raises**: `AssertionError` if any null values are found.
+# Validate
+Assertion(df).satisfies(s).no_nulls().validate()
+```
 
-## `assert_unique`
+---
 
-Asserts that all values in a specified column are unique.
+## Schema Builder
 
-- **Usage**: `assert_unique(df, column)`
-- **Parameters**:
-    - `df` (`pd.DataFrame`): The DataFrame containing the column.
-    - `column` (`str`): The name of the column to check for uniqueness.
-- **Raises**: `AssertionError` if any duplicate values are found.
+The `schema()` builder provides a fluent interface for defining DataFrame validation rules.
 
-## `assert_column_in_range`
+### Basic Usage
 
-Asserts that all values in a numeric column fall within a specified inclusive range.
+```python
+from ml_assert import schema
 
-- **Usage**: `assert_column_in_range(df, column, min_value=None, max_value=None)`
-- **Parameters**:
-    - `df` (`pd.DataFrame`): The DataFrame containing the column.
-    - `column` (`str`): The name of the numeric column.
-    - `min_value` (`Optional[float]`): The minimum allowed value (inclusive).
-    - `max_value` (`Optional[float]`): The maximum allowed value (inclusive).
-- **Raises**: `AssertionError` if any value is outside the `[min_value, max_value]` range.
+# Create a schema
+s = schema()
+s.col("user_id").is_unique()
+s.col("age").in_range(18, 70)
+s.col("plan_type").in_set(["basic", "premium", "free"])
+```
 
-## `assert_values_in_set`
+### Available Validators
 
-Asserts that all values in a column are present in a given set of allowed values.
+#### `is_unique()`
+Checks if column values are unique.
 
-- **Usage**: `assert_values_in_set(df, column, allowed_set)`
-- **Parameters**:
-    - `df` (`pd.DataFrame`): The DataFrame containing the column.
-    - `column` (`str`): The name of the column to check.
-    - `allowed_set` (`Iterable`): A set or list of allowed values.
-- **Raises**: `AssertionError` if any value is found that is not in `allowed_set`.
+#### `in_range(min_val, max_val)`
+Checks if column values are within a range.
+
+**Parameters:**
+- `min_val`: Minimum allowed value
+- `max_val`: Maximum allowed value
+
+#### `is_type(dtype)`
+Checks if column has the specified data type.
+
+**Parameters:**
+- `dtype`: Expected data type (e.g., "int64", "float64", "object")
+
+#### `in_set(allowed_values)`
+Checks if column values are in a set of allowed values.
+
+**Parameters:**
+- `allowed_values`: Set or list of allowed values
+
+#### `matches(pattern)`
+Checks if column values match a regex pattern.
+
+**Parameters:**
+- `pattern`: Regular expression pattern to match
+
+#### `is_not_null()`
+Checks if column has no null values.
+
+#### `is_sorted(ascending=True)`
+Checks if column is sorted.
+
+**Parameters:**
+- `ascending`: Whether to check ascending order (default: True)
+
+---
+
+## DataFrameAssertion
+
+The main class for DataFrame validation.
+
+### Methods
+
+#### `satisfies(schema)`
+Validates the DataFrame against a schema definition.
+
+**Parameters:**
+- `schema`: A schema object created using the `schema()` builder
+
+**Returns:**
+- `self` for method chaining
+
+#### `no_nulls(columns=None)`
+Checks for null values in specified columns.
+
+**Parameters:**
+- `columns`: Optional list of column names to check. If None, checks all columns.
+
+**Returns:**
+- `self` for method chaining
+
+#### `validate()`
+Executes all chained assertions.
+
+**Raises:**
+- `AssertionError` if any assertion fails
+
+---
+
+## Error Handling & Result Reporting
+
+- All assertion methods raise `AssertionError` if a check fails during chaining, unless `.validate()` is called.
+- `.validate()` returns an `AssertionResult` object:
+    - `success` (bool): True if all assertions passed.
+    - `message` (str): Summary message.
+    - `timestamp` (datetime): When the check was run.
+    - `metadata` (dict): Details of each assertion (name, args, success, error if any).
+
+---
+
+## Examples
+
+### Basic Schema Validation
+
+```python
+from ml_assert import Assertion, schema
+
+# Create a schema
+s = schema()
+s.col("id").is_unique()
+s.col("age").in_range(18, 70)
+s.col("email").matches(r"^[^@]+@[^@]+\.[^@]+$")
+
+# Validate
+Assertion(df).satisfies(s).validate()
+```
+
+### Complex Schema with Multiple Rules
+
+```python
+from ml_assert import Assertion, schema
+
+# Create a schema
+s = schema()
+s.col("user_id").is_unique().is_not_null()
+s.col("age").in_range(18, 70).is_type("int64")
+s.col("plan_type").in_set(["basic", "premium", "free"])
+s.col("subscription_date").is_sorted(ascending=True)
+
+# Validate
+Assertion(df).satisfies(s).no_nulls(["user_id", "plan_type"]).validate()
+```
+
+For more detailed API reference, see [Data API](api/data.md).

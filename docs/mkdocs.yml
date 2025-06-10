@@ -26,7 +26,18 @@ copyright: Copyright &copy; 2025 Shinde Aditya
 docs_dir: source
 nav:
   - 'Home': 'index.md'
-  - 'Data Assertions': 'data_assertions.md'
-  - 'Statistical Assertions': 'statistical_assertions.md'
-  - 'Model Performance': 'model_assertions.md'
-  - 'Plugins': 'plugins.md'
+  - 'User Guide':
+    - 'Data Assertions': 'data_assertions.md'
+    - 'Statistical Assertions': 'statistical_assertions.md'
+    - 'Model Performance': 'model_assertions.md'
+    - 'Fairness & Explainability': 'fairness.md'
+    - 'Integrations': 'integrations.md'
+    - 'Plugins': 'plugins.md'
+  - 'API Reference':
+    - 'Core API': 'api/core.md'
+    - 'Data API': 'api/data.md'
+    - 'Model API': 'api/model.md'
+    - 'Stats API': 'api/stats.md'
+    - 'Fairness API': 'api/fairness.md'
+    - 'Integrations API': 'api/integrations.md'
+    - 'Plugins API': 'api/plugins.md'

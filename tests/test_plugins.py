@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from ml_assert.core.base import AssertionResult
 from ml_assert.plugins.base import Plugin
 from ml_assert.plugins.dvc_check import DVCArtifactCheckPlugin
 from ml_assert.plugins.file_exists import FileExistsPlugin
@@ -15,14 +16,21 @@ def test_file_exists_plugin_success(tmp_path):
     p.write_text("content")
 
     plugin = FileExistsPlugin()
-    plugin.run({"path": str(p)})  # Should not raise
+    result = plugin.run({"path": str(p)})
+    assert isinstance(result, AssertionResult)
+    assert result.success is True
+    assert "File exists" in result.message
+    assert result.metadata["path"] == str(p)
 
 
 def test_file_exists_plugin_failure(tmp_path):
     """Test that FileExistsPlugin fails when the file does not exist."""
     plugin = FileExistsPlugin()
-    with pytest.raises(AssertionError, match="File not found"):
-        plugin.run({"path": str(tmp_path / "nonexistent.txt")})
+    result = plugin.run({"path": str(tmp_path / "nonexistent.txt")})
+    assert isinstance(result, AssertionResult)
+    assert result.success is False
+    assert "File not found" in result.message
+    assert result.metadata["path"] == str(tmp_path / "nonexistent.txt")
 
 
 @patch("subprocess.run")
@@ -35,7 +43,11 @@ def test_dvc_check_plugin_success_clean(mock_subprocess_run):
     mock_subprocess_run.return_value = mock_result
 
     plugin = DVCArtifactCheckPlugin()
-    plugin.run({"path": "data/data.csv"})  # Should not raise
+    result = plugin.run({"path": "data/data.csv"})
+    assert isinstance(result, AssertionResult)
+    assert result.success is True
+    assert "in sync" in result.message
+    assert result.metadata["path"] == "data/data.csv"
 
 
 @patch("subprocess.run")
@@ -61,30 +73,42 @@ def test_dvc_check_plugin_failure_modified(mock_subprocess_run):
     mock_subprocess_run.return_value = mock_result
 
     plugin = DVCArtifactCheckPlugin()
-    with pytest.raises(AssertionError, match="not in sync"):
-        plugin.run({"path": "data/data.csv"})
+    result = plugin.run({"path": "data/data.csv"})
+    assert isinstance(result, AssertionResult)
+    assert result.success is False
+    assert "not in sync" in result.message
+    assert result.metadata["path"] == "data/data.csv"
+    assert "status" in result.metadata
 
 
 @patch("subprocess.run")
 def test_dvc_check_dvc_command_fails(mock_subprocess_run):
-    """Test DVC plugin raises error if DVC command itself fails."""
+    """Test DVC plugin returns AssertionResult if DVC command itself fails."""
     mock_result = MagicMock()
     mock_result.stdout = ""
     mock_result.stderr = "DVC error: repo not found"
     mock_result.returncode = 1
     mock_subprocess_run.return_value = mock_result
-
     plugin = DVCArtifactCheckPlugin()
-    with pytest.raises(RuntimeError, match="DVC command failed"):
-        plugin.run({"path": "data/data.csv"})
+    result = plugin.run({"path": "data/data.csv"})
+    assert isinstance(result, AssertionResult)
+    assert result.success is False
+    assert "DVC command failed" in result.message
+    assert result.metadata["path"] == "data/data.csv"
+    assert "stderr" in result.metadata
 
 
-def test_dvc_check_plugin_dvc_not_found():
+@patch("subprocess.run")
+def test_dvc_check_plugin_dvc_not_found(mock_subprocess_run):
     """Test DVC plugin raises error if dvc command is not found."""
-    with patch("subprocess.run", side_effect=FileNotFoundError):
-        plugin = DVCArtifactCheckPlugin()
-        with pytest.raises(FileNotFoundError):
-            plugin.run({"path": "data/data.csv"})
+    mock_subprocess_run.side_effect = FileNotFoundError("dvc not found")
+    plugin = DVCArtifactCheckPlugin()
+    result = plugin.run({"path": "data/data.csv"})
+    assert isinstance(result, AssertionResult)
+    assert result.success is False
+    assert "dvc" in result.message.lower()
+    assert result.metadata["path"] == "data/data.csv"
+    assert "error" in result.metadata
 
 
 def test_base_plugin_not_implemented():

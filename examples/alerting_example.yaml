@@ -1,0 +1,18 @@
+# Example YAML config for ml-assert with Slack and Prometheus integrations
+slack_webhook: "https://hooks.slack.com/services/your/webhook/url"
+prometheus_port: 8000
+
+steps:
+  - type: schema
+    file: "data/train.csv"
+    schema_file: "schema.yaml"
+  - type: drift
+    train: "data/train.csv"
+    test: "data/test.csv"
+    alpha: 0.05
+  - type: model_performance
+    y_true: "data/y_true.csv"
+    y_pred: "data/y_pred.csv"
+    assertions:
+      accuracy: 0.8
+      f1: 0.7

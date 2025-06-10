@@ -1,13 +1,23 @@
 import json
 import subprocess
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
+import pytest
 from typer.testing import CliRunner
 
 from ml_assert.cli import app
 
 runner = CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def patch_prometheus_exporter_start():
+    with patch(
+        "ml_assert.integrations.prometheus.PrometheusExporter.start", return_value=None
+    ):
+        yield
 
 
 def write_csv(path, df):

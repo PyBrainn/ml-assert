@@ -1,7 +1,7 @@
 # ml-assert
 
 <p align="center">
-  <img src="./docs/source/assets/logo.svg" alt="ml-assert logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/HeyShinde/ml-assert/main/docs/source/assets/logo.svg" alt="ml-assert logo" width="200"/>
 </p>
 
 <p align="center">
@@ -181,4 +181,4 @@ Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to ge
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the `LICENSE.txt` file for details.
+This project is licensed under the Apache 2.0 License - see the `LICENSE` file for details.

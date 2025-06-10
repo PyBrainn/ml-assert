@@ -7,8 +7,55 @@ A lightweight, chainable assertion toolkit for validating data and models in ML 
 - **Data Validation**: Schema, nulls, uniqueness, ranges, and value sets.
 - **Statistical Checks**: Distribution drift (KS, Chi-square) and drift detection.
 - **Model Performance**: Accuracy, precision, recall, F1-score, and ROC AUC.
+- **Fairness & Explainability**: Demographic parity, equal opportunity, and SHAP values.
+- **Integrations**: MLflow, Prometheus, Slack, and DVC.
 - **Fluent Interface**: Chain assertions for clean, readable code.
 - **CLI Runner**: Run checks from a YAML configuration.
+
+---
+
+## Architecture Overview
+
+```mermaid
+graph TD
+    A[Core Assertions] --> B[DataFrameAssertion]
+    A --> C[ModelAssertion]
+    A --> D[FairnessAssertion]
+    B & C & D --> E[AssertionResult]
+    E --> F[Integrations]
+    F --> G[SlackAlerter]
+    F --> H[PrometheusExporter]
+    F --> I[MLflowLogger]
+    F --> J[DVCArtifactChecker]
+    E --> K[Plugins]
+    K --> L[Custom Plugins]
+    K --> M[Built-in Plugins]
+    E --> N[CLI Runner]
+    N --> O[YAML Config]
+```
+
+---
+
+## Documentation Structure
+
+- **User Guide**: High-level documentation with examples and use cases
+  - [Data Assertions](data_assertions.md)
+  - [Statistical Assertions](statistical_assertions.md)
+  - [Model Performance](model_assertions.md)
+  - [Fairness & Explainability](fairness.md)
+  - [Integrations](integrations.md)
+  - [Plugins](plugins.md)
+
+- **API Reference**: Detailed technical documentation
+  - [Core API](api/core.md)
+  - [Data API](api/data.md)
+  - [Model API](api/model.md)
+  - [Stats API](api/stats.md)
+  - [Fairness API](api/fairness.md)
+  - [Integrations API](api/integrations.md)
+  - [Plugins API](api/plugins.md)
+
+---
 
 ## Installation
 
@@ -16,15 +63,13 @@ A lightweight, chainable assertion toolkit for validating data and models in ML 
 pip install ml-assert
 ```
 
-## Usage
+## Quick Start
 
 ### Data Assertions
 
-Create a `DataFrame` and use `DataFrameAssertion` to chain validation checks.
-
 ```python
 import pandas as pd
-from ml_assert import DataFrameAssertion
+from ml_assert import Assertion, schema
 
 df = pd.DataFrame({
     "id": [1, 2, 3],
@@ -32,54 +77,77 @@ df = pd.DataFrame({
     "score": [0.9, 0.8, 0.7]
 })
 
-DataFrameAssertion(df) \
-    .schema({"id": "int64", "name": "object", "score": "float64"}) \
-    .no_nulls() \
-    .unique("id") \
-    .in_range("score", 0.0, 1.0) \
-    .validate()
+# Create a schema
+s = schema()
+s.col("id").is_unique()
+s.col("score").in_range(0.0, 1.0)
+
+# Validate
+Assertion(df).satisfies(s).no_nulls().validate()
 ```
 
-### Model Performance Assertions
-
-Validate model predictions and scores using `assert_model`.
+### Model Performance
 
 ```python
-import numpy as np
 from ml_assert import assert_model
 
-y_true = np.array([0, 1, 1, 0, 1, 0])
-y_pred = np.array([0, 1, 0, 0, 1, 1])
-y_scores = np.array([0.1, 0.9, 0.4, 0.2, 0.8, 0.6])
-
 assert_model(y_true, y_pred, y_scores) \
-    .accuracy(min_score=0.6) \
-    .precision(min_score=0.65) \
-    .recall(min_score=0.65) \
-    .f1(min_score=0.65) \
-    .roc_auc(min_score=0.8) \
+    .accuracy(min_score=0.8) \
+    .precision(min_score=0.8) \
+    .recall(min_score=0.8) \
+    .f1(min_score=0.8) \
+    .roc_auc(min_score=0.9) \
     .validate()
 ```
 
-### Statistical Drift Detection
-
-Check for statistical drift between two `DataFrames`.
+### Statistical Drift
 
 ```python
-from ml_assert.stats import assert_no_drift
-
-df_train = pd.DataFrame({'num': [1, 2, 3], 'cat': ['a', 'b', 'a']})
-df_test = pd.DataFrame({'num': [1, 2, 4], 'cat': ['a', 'b', 'x']})
+from ml_assert.stats.drift import assert_no_drift
 
 assert_no_drift(df_train, df_test, alpha=0.05)
 ```
 
+### Fairness & Explainability
+
+```python
+from ml_assert.fairness import assert_fairness
+
+assert_fairness(
+    y_true=y_true,
+    y_pred=y_pred,
+    sensitive_features=sensitive_features,
+    metrics=["demographic_parity", "equal_opportunity"],
+    threshold=0.1
+)
+```
+
 ## CLI Usage
 
-Run checks from a YAML file.
+Run checks from a YAML file:
 
 ```bash
 ml_assert run --config /path/to/config.yaml
 ```
 
-See the `examples` directory for more details.
+Example config:
+```yaml
+steps:
+  - type: drift
+    train: 'ref.csv'
+    test: 'cur.csv'
+    alpha: 0.05
+
+  - type: model_performance
+    y_true: 'y_true.csv'
+    y_pred: 'y_pred.csv'
+    y_scores: 'y_scores.csv'
+    assertions:
+      accuracy: 0.75
+      roc_auc: 0.80
+
+  - type: file_exists
+    path: 'my_model.pkl'
+```
+
+For more examples and detailed documentation, see the [User Guide](data_assertions.md) and [API Reference](api/core.md).
