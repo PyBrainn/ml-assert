@@ -1,4 +1,5 @@
 site_name: ml-assert
+site_url: https://heyshinde.github.io/ml-assert/
 repo_url: https://github.com/heyshinde/ml-assert
 theme:
   name: material

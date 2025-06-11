@@ -103,7 +103,7 @@ jobs:
     needs: [validate-and-build]
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -128,7 +128,7 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Configure GitHub repository
+      - name: Configure GitHub Packages Authentication
         run: |
           poetry config repositories.github https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
           poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
@@ -140,7 +140,7 @@ jobs:
     name: publish-docs-to-gh-pages
     needs: [validate-and-build]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     # Grant GITHUB_TOKEN the permissions required to deploy to GitHub Pages
     permissions:
       contents: write
