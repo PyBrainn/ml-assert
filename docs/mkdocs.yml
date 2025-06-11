@@ -33,6 +33,7 @@ nav:
     - 'Fairness & Explainability': 'fairness.md'
     - 'Integrations': 'integrations.md'
     - 'Plugins': 'plugins.md'
+    - 'Explainability': 'explainability.md'
   - 'API Reference':
     - 'Core API': 'api/core.md'
     - 'Data API': 'api/data.md'
