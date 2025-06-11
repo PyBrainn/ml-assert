@@ -136,6 +136,39 @@ jobs:
       - name: Publish package to GitHub Packages
         run: poetry publish -r github -n
 
+  # Temporary Debug Job for GitHub Packages
+  debug-github-publish:
+    name: Debug GitHub Publish
+    needs: [validate-and-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: '2.1.3'
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Configure GitHub Packages Authentication
+        run: |
+          poetry config repositories.github https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
+      - name: Attempt Publish with Verbose Output
+        run: poetry publish -r github -n -vvv # Max verbosity
+
   publish-docs-to-gh-pages:
     name: publish-docs-to-gh-pages
     needs: [validate-and-build]
