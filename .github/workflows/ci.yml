@@ -130,11 +130,11 @@ jobs:
 
       - name: Configure GitHub repository
         run: |
-          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}
+          poetry config repositories.github https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
           poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish package to GitHub Packages
-        run: poetry publish -r github
+        run: poetry publish -r github --build
 
   publish-docs-to-gh-pages:
     name: publish-docs-to-gh-pages
