@@ -30,5 +30,10 @@
                 "added"
             ]
         }
-    ]
+    ],
+    "template": "${{CHANGELOG}}\n\nFull Changelog: ${{COMPARE_URL}}",
+    "pr_template": "- ${{TITLE}} (#${{NUMBER}})\n",
+    "empty_template": "No significant changes.",
+    "exclude_labels": ["skip-changelog"],
+    "max_commits": 100
 }
