@@ -106,6 +106,9 @@ jobs:
       contents: write
       packages: write
 
+    env:
+      PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -130,7 +133,7 @@ jobs:
 
       - name: Configure GitHub Packages Authentication
         run: |
-          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}/
+          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}/ml-assert
           poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish package to GitHub Packages
