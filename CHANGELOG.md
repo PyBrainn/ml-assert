@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2025-06-12
+
+### Added
+- Added comprehensive cross-validation support with multiple strategies:
+  - K-Fold Cross-Validation
+  - Stratified K-Fold Cross-Validation
+  - Leave-One-Out Cross-Validation
+- Added cross-validation assertions for multiple metrics:
+  - Accuracy Score
+  - Precision Score
+  - Recall Score
+  - F1 Score
+  - ROC AUC Score
+- Added `get_cv_summary` function for detailed cross-validation metrics
+- Added parallel processing support for faster cross-validation
+- Added comprehensive documentation for cross-validation features
+- Added cross-validation examples in documentation
+
+### Changed
+- Updated model evaluation to support cross-validation-based assertions
+- Enhanced error handling for cross-validation operations
+- Improved documentation structure to include cross-validation section
+
+### Fixed
+- Fixed potential memory issues in large-scale cross-validation
+- Fixed documentation formatting for cross-validation examples
+
 ## [1.0.4] - 2025-06-11
 
 ### Added

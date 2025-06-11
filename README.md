@@ -1,7 +1,7 @@
 # ml-assert
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/HeyShinde/ml-assert/main/docs/source/assets/logo.svg" alt="ml-assert logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/PyBrainn/ml-assert/main/docs/source/assets/logo.svg" alt="ml-assert logo" width="200"/>
 </p>
 
 <p align="center">
@@ -174,6 +174,96 @@ ml_assert run config.yaml
 This command generates two reports:
 -   `config.report.json`: A machine-readable summary.
 -   `config.report.html`: A human-friendly HTML report.
+
+## Cross-Validation Support
+
+A Python library for asserting machine learning model performance using cross-validation.
+
+## Features
+
+- Cross-validation support for model evaluation
+- Multiple cross-validation strategies:
+  - K-Fold Cross-Validation
+  - Stratified K-Fold Cross-Validation
+  - Leave-One-Out Cross-Validation
+- Support for various metrics:
+  - Accuracy
+  - Precision
+  - Recall
+  - F1 Score
+  - ROC AUC Score
+- Parallel processing for faster cross-validation
+- Comprehensive test suite
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Basic Usage
+
+```python
+from sklearn.linear_model import LogisticRegression
+from ml_assert.model.cross_validation import assert_cv_accuracy_score
+
+# Create and train your model
+model = LogisticRegression()
+X, y = your_data  # Your features and target variables
+
+# Assert minimum accuracy across cross-validation folds
+assert_cv_accuracy_score(model, X, y, min_score=0.85)
+```
+
+### Different Cross-Validation Strategies
+
+```python
+# K-Fold Cross-Validation (default)
+assert_cv_accuracy_score(model, X, y, min_score=0.85, cv_type='kfold', n_splits=5)
+
+# Stratified K-Fold Cross-Validation
+assert_cv_accuracy_score(model, X, y, min_score=0.85, cv_type='stratified', n_splits=5)
+
+# Leave-One-Out Cross-Validation
+assert_cv_accuracy_score(model, X, y, min_score=0.85, cv_type='loo')
+```
+
+### Multiple Metrics
+
+```python
+from ml_assert.model.cross_validation import (
+    assert_cv_accuracy_score,
+    assert_cv_precision_score,
+    assert_cv_recall_score,
+    assert_cv_f1_score,
+    assert_cv_roc_auc_score,
+)
+
+# Assert multiple metrics
+assert_cv_accuracy_score(model, X, y, min_score=0.85)
+assert_cv_precision_score(model, X, y, min_score=0.80)
+assert_cv_recall_score(model, X, y, min_score=0.80)
+assert_cv_f1_score(model, X, y, min_score=0.80)
+assert_cv_roc_auc_score(model, X, y, min_score=0.80)
+```
+
+### Get Cross-Validation Summary
+
+```python
+from ml_assert.model.cross_validation import get_cv_summary
+
+# Get summary of all metrics
+summary = get_cv_summary(model, X, y)
+print(summary)
+```
+
+## Running Tests
+
+```bash
+pytest src/ml_assert/tests/
+```
 
 ## Contributing
 

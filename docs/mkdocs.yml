@@ -1,6 +1,6 @@
 site_name: ml-assert
-site_url: https://heyshinde.github.io/ml-assert/
-repo_url: https://github.com/heyshinde/ml-assert
+site_url: https://pybrainn.github.io/ml-assert/
+repo_url: https://github.com/pybrainn/ml-assert
 theme:
   name: material
   logo: assets/logo.svg
@@ -22,8 +22,8 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/heyshinde/ml-assert
-copyright: Copyright &copy; 2025 Shinde Aditya
+      link: https://github.com/pybrainn/ml-assert
+copyright: Copyright &copy; 2025 PyBrainn
 docs_dir: source
 nav:
   - 'Home': 'index.md'
@@ -31,6 +31,7 @@ nav:
     - 'Data Assertions': 'data_assertions.md'
     - 'Statistical Assertions': 'statistical_assertions.md'
     - 'Model Performance': 'model_assertions.md'
+    - 'Cross-Validation': 'cross_validation.md'
     - 'Fairness & Explainability': 'fairness.md'
     - 'Integrations': 'integrations.md'
     - 'Plugins': 'plugins.md'
