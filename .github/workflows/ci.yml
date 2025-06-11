@@ -105,19 +105,11 @@ jobs:
     permissions:
       contents: write
       packages: write
-
-    env:
-      PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
+      id-token: write # Needed for OIDC if using future PyPI trusted publishers; good practice
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Download all the dists
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -131,13 +123,18 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Configure GitHub Packages Authentication
-        run: |
-          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}
-          poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: poetry install --sync
+
+      - name: Build package
+        run: poetry build
 
       - name: Publish package to GitHub Packages
-        run: poetry publish -r github -n
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          TWINE_REPOSITORY_URL: https://pypi.pkg.github.com/${{ github.repository_owner }}/
+        run: poetry run twine upload dist/*
 
   publish-docs-to-gh-pages:
     name: publish-docs-to-gh-pages
