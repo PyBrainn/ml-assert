@@ -134,7 +134,7 @@ jobs:
           poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish package to GitHub Packages
-        run: poetry publish -r github --no-build
+        run: poetry publish -r github -n
 
   publish-docs-to-gh-pages:
     name: publish-docs-to-gh-pages
