@@ -4,7 +4,7 @@ First off, thank you for considering contributing to `ml-assert`! It's people li
 
 ## Where do I go from here?
 
-If you've noticed a bug or have a feature request, please [open an issue](https://github.com/HeyShinde/ml-assert/issues/new). It's generally best to discuss changes in an issue before you start working on a large pull request.
+If you've noticed a bug or have a feature request, please [open an issue](https://github.com/PyBrainn/ml-assert/issues/new). It's generally best to discuss changes in an issue before you start working on a large pull request.
 
 ## Fork & create a branch
 

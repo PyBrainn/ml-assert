@@ -1,8 +1,8 @@
 """Top-level package for ml-assert."""
 
-__author__ = """Shinde"""
-__email__ = "aditya@heyshinde.com"
-__version__ = "1.0.4"
+__author__ = """PyBrainn"""
+__email__ = "pybrainn@heyshinde.com"
+__version__ = "1.0.5"
 
 from .core.dsl import DataFrameAssertion as Assertion
 from .core.dsl import assert_model
