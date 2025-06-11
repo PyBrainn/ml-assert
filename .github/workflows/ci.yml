@@ -36,6 +36,11 @@ jobs:
       - name: Install twine
         run: poetry run pip install twine
 
+      - name: Configure Poetry for GitHub Packages
+        run: |
+          poetry config repositories.github https://pypi.pkg.github.com/HeyShinde
+          poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
+
       - name: Lint with ruff
         run: poetry run ruff check .
 
@@ -105,10 +110,11 @@ jobs:
     name: publish-to-github
     needs: [validate-and-build]
     runs-on: ubuntu-latest
+    # if: startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
       packages: write
-      id-token: write # Needed for OIDC if using future PyPI trusted publishers; good practice
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -127,22 +133,15 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
-        run: poetry install --no-root
+        run: poetry install
 
-      - name: Install twine
-        run: poetry run pip install twine
-
-      - name: Build package
-        run: poetry build
+      - name: Configure Poetry for GitHub Packages
+        run: |
+          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}
+          poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish package to GitHub Packages
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          TWINE_REPOSITORY_URL: https://pypi.pkg.github.com/${{ github.repository_owner }}
-        run: |
-          poetry build
-          poetry run twine upload dist/*
+        run: poetry publish -r github --build
 
   publish-docs-to-gh-pages:
     name: publish-docs-to-gh-pages
