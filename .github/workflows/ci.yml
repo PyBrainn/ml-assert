@@ -38,7 +38,7 @@ jobs:
 
       - name: Configure Poetry for GitHub Packages
         run: |
-          poetry config repositories.github https://pypi.pkg.github.com/HeyShinde
+          poetry config repositories.github https://pypi.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
           poetry config http-basic.github __token__ ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint with ruff
