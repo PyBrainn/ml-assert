@@ -1,39 +1,68 @@
 {
     "categories": [
         {
-            "title": "## Breaking Changes",
-            "labels": [
-                "breaking"
-            ]
+            "title": "### 🚀 Features",
+            "labels": ["feature", "enhancement", "feat", "new feature", "feature request"]
         },
         {
-            "title": "## Deprecated",
-            "labels": [
-                "deprecated"
-            ]
+            "title": "### Changed",
+            "labels": ["change", "update", "modify", "refactor", "refactoring"]
         },
         {
-            "title": "## Changed",
-            "labels": [
-                "changed"
-            ]
+            "title": "### 🐛 Fixed",
+            "labels": ["fix", "bug", "bugfix", "fixes", "issue", "bug report"]
         },
         {
-            "title": "## Fixed",
-            "labels": [
-                "fixed"
-            ]
+            "title": "### 📚 Documentation",
+            "labels": ["documentation", "docs", "doc", "readme", "guide", "tutorial"]
         },
         {
-            "title": "## Added",
-            "labels": [
-                "added"
-            ]
+            "title": "### 🔧 Maintenance",
+            "labels": ["maintenance", "chore", "refactor", "refactoring", "cleanup", "code cleanup"]
+        },
+        {
+            "title": "### ⚡️ Performance",
+            "labels": ["performance", "perf", "optimization", "optimize", "speed"]
+        },
+        {
+            "title": "### 🧪 Testing",
+            "labels": ["test", "testing", "tests", "unit test", "integration test"]
+        },
+        {
+            "title": "### 🔒 Security",
+            "labels": ["security", "vulnerability", "secure", "security fix"]
+        },
+        {
+            "title": "### 🎨 Style",
+            "labels": ["style", "formatting", "lint", "linter", "code style"]
+        },
+        {
+            "title": "### 📦 Dependencies",
+            "labels": ["dependencies", "deps", "dependency", "package", "packages"]
+        },
+        {
+            "title": "### 🚨 Breaking Changes",
+            "labels": ["breaking", "breaking change", "breaking-change", "major"]
         }
     ],
-    "template": "${{CHANGELOG}}\n\nFull Changelog: ${{COMPARE_URL}}",
-    "pr_template": "- ${{TITLE}} (#${{NUMBER}})\n",
-    "empty_template": "No significant changes.",
-    "exclude_labels": ["skip-changelog"],
-    "max_commits": 100
+    "ignore_labels": [
+        "ignore",
+        "skip-changelog",
+        "wontfix",
+        "duplicate",
+        "invalid",
+        "question"
+    ],
+    "sort": "ASC",
+    "template": "## [{{TAG_NAME}}] - {{DATE}}\n\n#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n### Uncategorized\n\n#{{UNCATEGORIZED}}\n</details>",
+    "pr_template": "- #{{NUMBER}} #{{TITLE}} (#{{AUTHOR}})",
+    "empty_template": "## [{{TAG_NAME}}] - {{DATE}}\n\nNo changes in this release.",
+    "categories_template": "#{{TITLE}}\n\n#{{CHANGELOG}}\n",
+    "label_extractor": [
+        {
+            "pattern": "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|security|deps)(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+            "on_property": "title",
+            "target": "$1"
+        }
+    ]
 }

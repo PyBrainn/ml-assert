@@ -195,12 +195,6 @@ A Python library for asserting machine learning model performance using cross-va
 - Parallel processing for faster cross-validation
 - Comprehensive test suite
 
-## Installation
-
-```bash
-pip install -r requirements.txt
-```
-
 ## Usage
 
 ### Basic Usage

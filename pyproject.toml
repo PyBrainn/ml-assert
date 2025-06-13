@@ -10,9 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
-    { name = "PyBrainn", email = "pybrainn@heyshinde.com" }
-]
-maintainers = [
+    { name = "PyBrainn", email = "pybrainn@heyshinde.com" },
     { name = "Shinde Aditya", email = "aditya@heyshinde.com" },
 ]
 keywords = ["ml", "machine-learning", "testing", "validation", "assertion", "mlops"]
@@ -54,7 +52,7 @@ file_exists = "ml_assert.plugins.file_exists:FileExistsPlugin"
 dvc_check = "ml_assert.plugins.dvc_check:DVCArtifactCheckPlugin"
 
 [project.urls]
-Homepage = "https://github.io/PyBrainn/ml-assert"
+Homepage = "https://pybrainn.github.io/ml-assert/"
 Repository = "https://github.com/pybrainn/ml-assert"
 "Bug Tracker" = "https://github.com/pybrainn/ml-assert/issues"
 

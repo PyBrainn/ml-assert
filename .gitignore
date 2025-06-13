@@ -8,6 +8,7 @@ __pycache__/
 *.egg-info/
 dist/
 mlruns
+changelog_eg.md
 
 # Ignore coverage and test caches
 .pytest_cache/
