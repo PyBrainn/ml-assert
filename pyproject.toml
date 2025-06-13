@@ -4,13 +4,14 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ml-assert"
-version = "1.0.4"
+version = "1.0.5"
 description = "A comprehensive assertion-and-validation toolkit for ML workflows."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
-    { name = "Shinde Aditya", email = "aditya@heyshinde.com" }
+    { name = "PyBrainn", email = "pybrainn@heyshinde.com" },
+    { name = "Shinde Aditya", email = "aditya@heyshinde.com" },
 ]
 keywords = ["ml", "machine-learning", "testing", "validation", "assertion", "mlops"]
 classifiers = [
@@ -51,23 +52,14 @@ file_exists = "ml_assert.plugins.file_exists:FileExistsPlugin"
 dvc_check = "ml_assert.plugins.dvc_check:DVCArtifactCheckPlugin"
 
 [project.urls]
-Homepage = "https://github.com/shinde-aditya/ml-assert"
-Repository = "https://github.com/shinde-aditya/ml-assert"
-"Bug Tracker" = "https://github.com/shinde-aditya/ml-assert/issues"
+Homepage = "https://pybrainn.github.io/ml-assert/"
+Repository = "https://github.com/pybrainn/ml-assert"
+"Bug Tracker" = "https://github.com/pybrainn/ml-assert/issues"
 
 [tool.poetry]
 packages = [
     { include = "ml_assert", from = "src" }
 ]
-
-[[tool.poetry.source]]
-name = "pypi-public"
-url = "https://pypi.org/simple/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "github"
-url = "https://pypi.pkg.github.com/HeyShinde"
 
 [tool.poetry.dependencies]
 python = "^3.11"
