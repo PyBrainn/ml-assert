@@ -44,3 +44,4 @@ nav:
     - 'Fairness API': 'api/fairness.md'
     - 'Integrations API': 'api/integrations.md'
     - 'Plugins API': 'api/plugins.md'
+  - 'Security': 'SECURITY.md'
